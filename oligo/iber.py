@@ -1,4 +1,6 @@
-import requests, json
+import requests
+import json
+
 
 def watthourmeter(user, password):
     session = requests.Session()
@@ -23,4 +25,6 @@ def watthourmeter(user, password):
         return -1
     jsonresponse = response.json()
     return jsonresponse[0]
+
+
 
