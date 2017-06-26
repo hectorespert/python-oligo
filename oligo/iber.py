@@ -23,9 +23,8 @@ class Iber:
         """Create session with your credentials.
            Inicia la session con tus credenciales."""
         self.__session = requests.Session()
-        logindata = [user, password, "", "", "", "", "", "0", "0", "0", "", "s"]
-        payload = json.dumps(logindata)
-        response = self.__session.request("POST", self.__loginurl, data=payload, headers=self.__headers)
+        logindata = self.__logindata(user, password)
+        response = self.__session.request("POST", self.__loginurl, data=logindata, headers=self.__headers)
         if response.status_code != 200:
             self.__session = None
             raise ResponseException
@@ -33,6 +32,10 @@ class Iber:
         if jsonresponse["success"] != "true":
             self.__session = None
             raise LoginException
+
+    def __logindata(self, user, password):
+        logindata = [user, password, "", "", "", "", "", "0", "0", "0", "", "s"]
+        return json.dumps(logindata)
 
     def __checksession(self):
         if not self.__session:
