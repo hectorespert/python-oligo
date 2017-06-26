@@ -6,6 +6,7 @@ class Iber:
 
     __loginurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/loginNew/login"
     __watthourmeterurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/escenarioNew/obtenerMedicionOnline/5"
+    __icpstatusurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/rearmeICP/consultarEstado"
     __headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0",
         'accept': "application/json; charset=utf-8",
@@ -14,9 +15,12 @@ class Iber:
     }
 
     def __init__(self):
+        """Iber class __init__ method."""
         self.__session = None
 
     def login(self, user, password):
+        """Create session with your credentials.
+           Inicia la session con tus credenciales."""
         self.__session = requests.Session()
         logindata = [user, password, "", "", "", "", "", "0", "0", "0", "", "s"]
         payload = json.dumps(logindata)
@@ -34,6 +38,8 @@ class Iber:
             raise SessionException
 
     def watthourmeter(self):
+        """Returns your current power consumption.
+           Devuelve tu consumo de energía actual."""
         self.__checksession()
         response = self.__session.request("GET", self.__watthourmeterurl, headers=self.__headers)
         if response.status_code != 200:
@@ -41,10 +47,18 @@ class Iber:
         jsonresponse = response.json()
         return jsonresponse[0]
 
-    #def datos(self):
-    #    self.__checksession()
-    #    response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/consumoNew/obtenerDatosConsumo/fechaInicio/18-06-201700:00:00/colectivo/USUCMP/frecuencia/horas/acumular/false", headers=self.__headers)
-    #    print(response.json())
+    def icpstatus(self):
+        """Returns the status of your ICP.
+           Devuelve el estado de tu ICP."""
+        self.__checksession()
+        response = self.__session.request("POST", self.__icpstatusurl, headers=self.__headers)
+        if response.status_code != 200:
+            raise ResponseException
+        jsonresponse = response.json()
+        if jsonresponse["icp"] == "trueConectado":
+            return True
+        else:
+            return False
 
 
 def watthourmeter(user, password):
@@ -58,6 +72,20 @@ def watthourmeter(user, password):
         return -1
     except SessionException:
         return -1
+
+
+def icpstatus(user, password):
+    try:
+        iber = Iber()
+        iber.login(user, password)
+        return iber.icpstatus()
+    except ResponseException:
+        return False
+    except LoginException:
+        return False
+    except SessionException:
+        return False
+
 
 
 
