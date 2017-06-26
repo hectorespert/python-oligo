@@ -2,6 +2,12 @@
 
 Obtiene datos del contador inteligente en la red de iberdrola distribución [WIP]
 
+Instalación:
+
+```
+pip install oligo
+```
+
 Ejemplo, consultar consumo actual:
 
 ```python
