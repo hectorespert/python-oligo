@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='oligo',
-    version='0.0.2',
+    version='0.0.3',
     packages=['oligo'],
     install_requires=[
           'requests',
@@ -11,5 +11,5 @@ setup(
     license='MIT',
     author='blackleg',
     author_email='hectorespertpardo@gmail.com',
-    description=''
+    description='Obtiene datos del contador inteligente en la red de iberdrola distribución'
 )
