@@ -60,6 +60,25 @@ class Iber:
         else:
             return False
 
+    def contracts(self):
+        self.__checksession()
+        response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/listaCtos/", headers=self.__headers)
+        if response.status_code != 200:
+            raise ResponseException
+        print(response.text)
+        jsonresponse = response.json()
+        if jsonresponse["success"]:
+            return jsonresponse["contratos"]
+
+    def contractselect(self, cups):
+        self.__checksession()
+        response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/seleccion/1", headers=self.__headers)
+        ##if response.status_code != 200:
+            ##raise ResponseException
+        print(response.status_code)
+        print(response.text)
+
+
 
 def watthourmeter(user, password):
     try:
