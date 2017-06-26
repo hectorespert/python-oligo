@@ -1,12 +1,13 @@
 import requests
 import json
-from oligo.exceptions import ResponseException, LoginException, SessionException
+from oligo.exceptions import ResponseException, LoginException, SessionException, NoResponseException, SelectContractException
 
 class Iber:
 
     __loginurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/loginNew/login"
-    __watthourmeterurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/escenarioNew/obtenerMedicionOnline/5"
+    __watthourmeterurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/escenarioNew/obtenerMedicionOnline/12"
     __icpstatusurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/rearmeICP/consultarEstado"
+    __contractsurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/listaCtos/"
     __headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0",
         'accept': "application/json; charset=utf-8",
@@ -24,11 +25,11 @@ class Iber:
         self.__session = requests.Session()
         logindata = [user, password, "", "", "", "", "", "0", "0", "0", "", "s"]
         payload = json.dumps(logindata)
-        loginresponse = self.__session.request("POST", self.__loginurl, data=payload, headers=self.__headers)
-        if loginresponse.status_code != 200:
+        response = self.__session.request("POST", self.__loginurl, data=payload, headers=self.__headers)
+        if response.status_code != 200:
             self.__session = None
             raise ResponseException
-        jsonresponse = loginresponse.json()
+        jsonresponse = response.json()
         if jsonresponse["success"] != "true":
             self.__session = None
             raise LoginException
@@ -44,6 +45,8 @@ class Iber:
         response = self.__session.request("GET", self.__watthourmeterurl, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
+        if not response.text:
+            raise NoResponseException
         jsonresponse = response.json()
         return jsonresponse[0]
 
@@ -54,6 +57,8 @@ class Iber:
         response = self.__session.request("POST", self.__icpstatusurl, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
+        if not response.text:
+            raise NoResponseException
         jsonresponse = response.json()
         if jsonresponse["icp"] == "trueConectado":
             return True
@@ -62,22 +67,34 @@ class Iber:
 
     def contracts(self):
         self.__checksession()
-        response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/listaCtos/", headers=self.__headers)
+        response = self.__session.request("GET", self.__contractsurl, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
-        print(response.text)
+        if not response.text:
+            raise NoResponseException
         jsonresponse = response.json()
         if jsonresponse["success"]:
             return jsonresponse["contratos"]
 
-    def contractselect(self, cups):
+    def contract(self):
         self.__checksession()
-        response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/seleccion/1", headers=self.__headers)
-        ##if response.status_code != 200:
-            ##raise ResponseException
-        print(response.status_code)
-        print(response.text)
+        response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/detalleCto/detalle/", headers=self.__headers)
+        if response.status_code != 200:
+            raise ResponseException
+        if not response.text:
+            raise NoResponseException
+        return response.json()
 
+    def contractselect(self, id):
+        self.__checksession()
+        response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/seleccion/" + id, headers=self.__headers)
+        if response.status_code != 200:
+            raise ResponseException
+        if not response.text:
+            raise NoResponseException
+        jsonresponse = response.json()
+        if not jsonresponse["success"]:
+            raise SelectContractException
 
 
 def watthourmeter(user, password):

@@ -8,3 +8,11 @@ class LoginException(Exception):
 
 class SessionException(Exception):
     pass
+
+
+class NoResponseException(Exception):
+    pass
+
+
+class SelectContractException(Exception):
+    pass
