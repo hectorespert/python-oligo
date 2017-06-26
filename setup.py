@@ -11,5 +11,5 @@ setup(
     license='MIT',
     author='blackleg',
     author_email='hectorespertpardo@gmail.com',
-    description='Obtiene datos del contador inteligente en la red de iberdrola distribución'
+    description='Obtiene datos del contador inteligente en la red de iberdrola distribucion'
 )
