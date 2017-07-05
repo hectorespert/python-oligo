@@ -12,7 +12,7 @@ class TestIberIt(unittest.TestCase):
 
         instance = iber.Iber()
         self.assertIsInstance(instance, iber.Iber)
-        #instance.login(user, pwd)
+        instance.login(user, pwd)
 
 
 
