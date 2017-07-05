@@ -15,7 +15,7 @@ class TestIberIt(unittest.TestCase):
         self.assertIsInstance(instance, iber.Iber)
         instance.login(user, pwd)
         sleep(2)
-        watt = iber.watthourmeter()
+        watt = instance.watthourmeter()
         self.assertIsNotNone(watt)
 
 
