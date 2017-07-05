@@ -8,6 +8,8 @@ class Iber:
     __watthourmeterurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/escenarioNew/obtenerMedicionOnline/12"
     __icpstatusurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/rearmeICP/consultarEstado"
     __contractsurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/listaCtos/"
+    __contractdetailurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/detalleCto/detalle/"
+    __contractselectionurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/seleccion/"
     __headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0",
         'accept': "application/json; charset=utf-8",
@@ -34,7 +36,7 @@ class Iber:
             raise LoginException
 
     def __logindata(self, user, password):
-        logindata = [user, password, "", "", "", "", "", "0", "0", "0", "", "s"]
+        logindata = [user, password, "", "Windows -", "PC", "Firefox 54.0", "", "0", "0", "0", "", "s"]
         return json.dumps(logindata)
 
     def __checksession(self):
@@ -81,7 +83,7 @@ class Iber:
 
     def contract(self):
         self.__checksession()
-        response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/detalleCto/detalle/", headers=self.__headers)
+        response = self.__session.request("GET", self.__contractdetailurl, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
         if not response.text:
@@ -90,7 +92,7 @@ class Iber:
 
     def contractselect(self, id):
         self.__checksession()
-        response = self.__session.request("GET", "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/seleccion/" + id, headers=self.__headers)
+        response = self.__session.request("GET", self.__contractselectionurl + id, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
         if not response.text:
