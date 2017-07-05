@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='oligo',
-    version='0.0.4',
+    version='0.0.6',
     packages=['oligo'],
     install_requires=[
           'requests',
