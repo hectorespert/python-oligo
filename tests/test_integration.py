@@ -2,6 +2,7 @@ import unittest
 
 from oligo import iber
 from os import environ
+from time import sleep
 
 
 class TestIberIt(unittest.TestCase):
@@ -13,8 +14,9 @@ class TestIberIt(unittest.TestCase):
         instance = iber.Iber()
         self.assertIsInstance(instance, iber.Iber)
         instance.login(user, pwd)
-
-
+        sleep(2)
+        watt = iber.watthourmeter()
+        self.assertIsNotNone(watt)
 
 
 if __name__ == '__main__':
