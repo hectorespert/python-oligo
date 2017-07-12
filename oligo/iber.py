@@ -1,6 +1,7 @@
-import requests
-import json
-from oligo.exceptions import ResponseException, LoginException, SessionException, NoResponseException, SelectContractException
+from requests import Session
+from json import dumps
+from .exceptions import ResponseException, LoginException, SessionException, NoResponseException, SelectContractException
+
 
 class Iber:
 
@@ -24,7 +25,7 @@ class Iber:
     def login(self, user, password):
         """Create session with your credentials.
            Inicia la session con tus credenciales."""
-        self.__session = requests.Session()
+        self.__session = Session()
         logindata = self.__logindata(user, password)
         response = self.__session.request("POST", self.__loginurl, data=logindata, headers=self.__headers)
         if response.status_code != 200:
@@ -37,7 +38,7 @@ class Iber:
 
     def __logindata(self, user, password):
         logindata = [user, password, "", "Windows -", "PC", "Firefox 54.0", "", "0", "0", "0", "", "s"]
-        return json.dumps(logindata)
+        return dumps(logindata)
 
     def __checksession(self):
         if not self.__session:

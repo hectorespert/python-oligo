@@ -1,13 +1,13 @@
 import unittest
 
-from oligo import iber
+from oligo import Iber
 
 
 class TestIber(unittest.TestCase):
 
     def test_instance(self):
-        instance = iber.Iber()
-        self.assertIsInstance(instance, iber.Iber)
+        instance = Iber()
+        self.assertIsInstance(instance, Iber)
 
 if __name__ == '__main__':
     unittest.main()
