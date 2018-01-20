@@ -54,7 +54,7 @@ class Iber:
         if not response.text:
             raise NoResponseException
         jsonresponse = response.json()
-        return jsonresponse[0]
+        return jsonresponse['valMagnitud']
 
     def icpstatus(self):
         """Returns the status of your ICP.
