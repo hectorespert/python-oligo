@@ -29,15 +29,17 @@ class Iber:
         logindata = self.__logindata(user, password)
         response = self.__session.request("POST", self.__loginurl, data=logindata, headers=self.__headers)
         if response.status_code != 200:
+            print("Login error, response status")
             self.__session = None
             raise ResponseException
         jsonresponse = response.json()
         if jsonresponse["success"] != "true":
+            print("Login error, bad login")
             self.__session = None
             raise LoginException
 
     def __logindata(self, user, password):
-        logindata = [user, password, "", "Windows -", "PC", "Firefox 54.0", "", "0", "0", "0", "", "s"]
+        logindata = [user, "00000000", "", "Linux -", "PC", "Chrome 76.0.3809.132", "0", password, "s"]
         return dumps(logindata)
 
     def __checksession(self):
@@ -45,8 +47,6 @@ class Iber:
             raise SessionException
 
     def watthourmeter(self):
-        """Returns your current power consumption.
-           Devuelve tu consumo de energía actual."""
         self.__checksession()
         response = self.__session.request("GET", self.__watthourmeterurl, headers=self.__headers)
         if response.status_code != 200:
@@ -109,10 +109,13 @@ def watthourmeter(user, password):
         iber.login(user, password)
         return iber.watthourmeter()
     except ResponseException:
+        print("Response error")
         return -1
     except LoginException:
+        print("Login error")
         return -1
     except SessionException:
+        print("Session error")
         return -1
 
 
@@ -122,14 +125,11 @@ def icpstatus(user, password):
         iber.login(user, password)
         return iber.icpstatus()
     except ResponseException:
+        print("Response error")
         return False
     except LoginException:
+        print("Login error")
         return False
     except SessionException:
+        print("Session error")
         return False
-
-
-
-
-
-
