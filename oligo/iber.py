@@ -5,12 +5,12 @@ from .exceptions import ResponseException, LoginException, SessionException, NoR
 
 class Iber:
 
-    __loginurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/loginNew/login"
-    __watthourmeterurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/escenarioNew/obtenerMedicionOnline/12"
-    __icpstatusurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/rearmeICP/consultarEstado"
-    __contractsurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/listaCtos/"
-    __contractdetailurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/detalleCto/detalle/"
-    __contractselectionurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/seleccion/"
+    __loginurl = "https://www.i-de.es/consumidores/rest/loginNew/login"
+    __watthourmeterurl = "https://www.i-de.es/consumidores/rest/escenarioNew/obtenerMedicionOnline/24"
+    __icpstatusurl = "https://www.i-de.es/consumidores/rest/rearmeICP/consultarEstado"
+    __contractsurl = "https://www.i-de.es/consumidores/rest/cto/listaCtos/"
+    __contractdetailurl = "https://www.i-de.es/consumidores/rest/detalleCto/detalle/"
+    __contractselectionurl = "https://www.i-de.es/consumidores/rest/cto/seleccion/"
     __headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0",
         'accept': "application/json; charset=utf-8",
