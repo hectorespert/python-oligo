@@ -1,18 +1,37 @@
 from requests import Session
-from json import dumps
-from .exceptions import ResponseException, LoginException, SessionException, NoResponseException, SelectContractException
+
+
+class ResponseException(Exception):
+    pass
+
+
+class LoginException(Exception):
+    pass
+
+
+class SessionException(Exception):
+    pass
+
+
+class NoResponseException(Exception):
+    pass
+
+
+class SelectContractException(Exception):
+    pass
 
 
 class Iber:
 
-    __loginurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/loginNew/login"
-    __watthourmeterurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/escenarioNew/obtenerMedicionOnline/12"
-    __icpstatusurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/rearmeICP/consultarEstado"
-    __contractsurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/listaCtos/"
-    __contractdetailurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/detalleCto/detalle/"
-    __contractselectionurl = "https://www.iberdroladistribucionelectrica.com/consumidores/rest/cto/seleccion/"
+    __domain = "https://www.i-de.es"
+    __login_url = __domain + "/consumidores/rest/loginNew/login"
+    __watthourmeter_url = __domain + "/consumidores/rest/escenarioNew/obtenerMedicionOnline/24"
+    __icp_status_url = __domain + "/consumidores/rest/rearmeICP/consultarEstado"
+    __contracts_url = __domain + "/consumidores/rest/cto/listaCtos/"
+    __contract_detail_url = __domain + "/consumidores/rest/detalleCto/detalle/"
+    __contract_selection_url = __domain + "/consumidores/rest/cto/seleccion/"
     __headers = {
-        'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0",
+        'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/77.0.3865.90 Chrome/77.0.3865.90 Safari/537.36",
         'accept': "application/json; charset=utf-8",
         'content-type': "application/json; charset=utf-8",
         'cache-control': "no-cache"
@@ -23,68 +42,61 @@ class Iber:
         self.__session = None
 
     def login(self, user, password):
-        """Create session with your credentials.
-           Inicia la session con tus credenciales."""
+        """Creates session with your credentials"""
         self.__session = Session()
-        logindata = self.__logindata(user, password)
-        response = self.__session.request("POST", self.__loginurl, data=logindata, headers=self.__headers)
+        login_data = "[\"{}\",\"{}\",null,\"Linux -\",\"PC\",\"Chrome 77.0.3865.90\",\"0\",\"\",\"s\"]".format(user, password)
+        response = self.__session.request("POST", self.__login_url, data=login_data, headers=self.__headers)
         if response.status_code != 200:
             self.__session = None
-            raise ResponseException
-        jsonresponse = response.json()
-        if jsonresponse["success"] != "true":
+            raise ResponseException("Response error, code: {}".format(response.status_code))
+        json_response = response.json()
+        if json_response["success"] != "true":
             self.__session = None
-            raise LoginException
+            raise LoginException("Login error, bad login")
 
-    def __logindata(self, user, password):
-        logindata = [user, password, "", "Windows -", "PC", "Firefox 54.0", "", "0", "0", "0", "", "s"]
-        return dumps(logindata)
-
-    def __checksession(self):
+    def __check_session(self):
         if not self.__session:
-            raise SessionException
+            raise SessionException("Session required, use login() method to obtain a session")
 
     def watthourmeter(self):
-        """Returns your current power consumption.
-           Devuelve tu consumo de energía actual."""
-        self.__checksession()
-        response = self.__session.request("GET", self.__watthourmeterurl, headers=self.__headers)
+        """Returns your current power consumption."""
+        self.__check_session()
+        response = self.__session.request("GET", self.__watthourmeter_url, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
         if not response.text:
             raise NoResponseException
-        jsonresponse = response.json()
-        return jsonresponse['valMagnitud']
+        json_response = response.json()
+        return json_response['valMagnitud']
 
     def icpstatus(self):
-        """Returns the status of your ICP.
-           Devuelve el estado de tu ICP."""
-        self.__checksession()
-        response = self.__session.request("POST", self.__icpstatusurl, headers=self.__headers)
+        """Returns the status of your ICP."""
+        self.__check_session()
+        response = self.__session.request("POST", self.__icp_status_url, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
         if not response.text:
             raise NoResponseException
-        jsonresponse = response.json()
-        if jsonresponse["icp"] == "trueConectado":
+        json_response = response.json()
+        if json_response["icp"] == "trueConectado":
             return True
         else:
             return False
 
     def contracts(self):
-        self.__checksession()
-        response = self.__session.request("GET", self.__contractsurl, headers=self.__headers)
+        self.__check_session()
+        response = self.__session.request("GET", self.__contracts_url, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
         if not response.text:
             raise NoResponseException
-        jsonresponse = response.json()
-        if jsonresponse["success"]:
-            return jsonresponse["contratos"]
+        json_response = response.json()
+        if json_response["success"]:
+            return json_response["contratos"]
 
     def contract(self):
-        self.__checksession()
-        response = self.__session.request("GET", self.__contractdetailurl, headers=self.__headers)
+        self.__check_session()
+        response = self.__session.request("GET", self.__contract_detail_url, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
         if not response.text:
@@ -92,44 +104,12 @@ class Iber:
         return response.json()
 
     def contractselect(self, id):
-        self.__checksession()
-        response = self.__session.request("GET", self.__contractselectionurl + id, headers=self.__headers)
+        self.__check_session()
+        response = self.__session.request("GET", self.__contract_selection_url + id, headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
         if not response.text:
             raise NoResponseException
-        jsonresponse = response.json()
-        if not jsonresponse["success"]:
+        json_response = response.json()
+        if not json_response["success"]:
             raise SelectContractException
-
-
-def watthourmeter(user, password):
-    try:
-        iber = Iber()
-        iber.login(user, password)
-        return iber.watthourmeter()
-    except ResponseException:
-        return -1
-    except LoginException:
-        return -1
-    except SessionException:
-        return -1
-
-
-def icpstatus(user, password):
-    try:
-        iber = Iber()
-        iber.login(user, password)
-        return iber.icpstatus()
-    except ResponseException:
-        return False
-    except LoginException:
-        return False
-    except SessionException:
-        return False
-
-
-
-
-
-
