@@ -1,15 +1,22 @@
-from distutils.core import setup
+import setuptools
 
-setup(
-    name='oligo',
-    version='1.0.0',
-    packages=['oligo'],
-    install_requires=[
-          'requests',
-      ],
-    url='https://github.com/blackleg/python-oligo',
-    license='MIT',
-    author='blackleg',
-    author_email='hectorespertpardo@gmail.com',
-    description='Obtiene datos del contador inteligente en la red de iberdrola distribucion'
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
+    name="oligo",
+    version="1.0.0",
+    author="blackleg",
+    author_email="hectorespertpardo@gmail.com",
+    description="Obtiene datos del contador inteligente en la red de iberdrola distribucion",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/blackleg/python-oligo",
+    packages=setuptools.find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+    python_requires='>=3.6',
 )
