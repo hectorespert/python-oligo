@@ -24,8 +24,8 @@ print(watt)
 from oligo import Iber
 connection = Iber()
 connection.login("user", "password")
-watt = connection.icpstatus()
-print(watt)
+status = connection.icpstatus()
+print(status)
 ```
 ## [EN] Python client (UNOFFICIAL) for i-DE (Iberdrola distribución).
 ### Install:
@@ -51,6 +51,6 @@ print(watt)
 from oligo import Iber
 connection = Iber()
 connection.login("user", "password")
-watt = connection.icpstatus()
-print(watt)
+status = connection.icpstatus()
+print(status)
 ```

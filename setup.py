@@ -5,14 +5,17 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="oligo",
-    version="1.0.0",
+    version="1.1.0",
     author="blackleg",
     author_email="hectorespertpardo@gmail.com",
-    description="Obtiene datos del contador inteligente en la red de iberdrola distribucion",
+    description="UNOFFICIAL Python client for i-DE",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/blackleg/python-oligo",
     packages=setuptools.find_packages(),
+    install_requires=[
+        'requests',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
