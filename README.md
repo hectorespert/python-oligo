@@ -1,14 +1,13 @@
 # python-oligo
 
-Obtiene datos del contador inteligente en la red de iberdrola distribución
-
-Instalación:
+## [ES] Cliente Python (NO OFICIAL) para i-DE (Iberdrola distribución).
+### Instalación:
 
 ```
 pip install oligo
 ```
-
-Ejemplo, consultar consumo actual:
+### Ejemplos:
+#### Consultar consumo actual:
 
 ```python
 from oligo import Iber
@@ -19,9 +18,34 @@ connection.login("user", "password")
 watt = connection.watthourmeter()
 print(watt)
 ```
+#### Consultar estado ICP interno:
 
+```python
+from oligo import Iber
+connection = Iber()
+connection.login("user", "password")
+watt = connection.icpstatus()
+print(watt)
+```
+## [EN] Python client (UNOFFICIAL) for i-DE (Iberdrola distribución).
+### Install:
 
-Ejemplo, consultar estado ICP interno:
+```
+pip install oligo
+```
+### Example:
+#### Obtain current consumption:
+
+```python
+from oligo import Iber
+
+connection = Iber()
+connection.login("user", "password")
+
+watt = connection.watthourmeter()
+print(watt)
+```
+#### Get ICP status:
 
 ```python
 from oligo import Iber
