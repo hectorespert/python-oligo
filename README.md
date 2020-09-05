@@ -1,5 +1,7 @@
 # python-oligo
 
+[![Build Status](https://travis-ci.org/hectorespert/python-oligo.svg?branch=master)](https://travis-ci.org/hectorespert/python-oligo)
+
 ## [ES] Cliente Python (NO OFICIAL) para i-DE (Iberdrola distribución).
 ### Instalación:
 
