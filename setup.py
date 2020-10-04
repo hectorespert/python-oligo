@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="oligo",
-    version="1.0.1",
-    author="blackleg",
+    version="1.1.0",
+    author="hectorespert",
     author_email="hectorespertpardo@gmail.com",
     description="UNOFFICIAL Python client for i-DE",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/blackleg/python-oligo",
+    url="https://github.com/hectorespert/python-oligo",
     packages=setuptools.find_packages(),
     install_requires=[
         'requests',
