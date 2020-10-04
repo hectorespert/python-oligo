@@ -1,8 +1,8 @@
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/hectorespert/python-oligo)
-
 # python-oligo
 
 [![Build Status](https://travis-ci.org/hectorespert/python-oligo.svg?branch=master)](https://travis-ci.org/hectorespert/python-oligo)
+
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/hectorespert/python-oligo)
 
 ## [ES] Cliente Python (NO OFICIAL) para i-DE (Iberdrola distribución).
 ### Instalación:
