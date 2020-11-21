@@ -81,7 +81,7 @@ class Iber:
 
     def watthourmeter(self):
         """Returns your current power consumption."""
-        return self.measurement()['power']
+        return self.measurement()['consumption']
 
     def icpstatus(self):
         """Returns the status of your ICP."""
