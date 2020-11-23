@@ -48,7 +48,7 @@ until_date = date.today() - timedelta(days=1)
 consumo = connection.consumption(from_date, until_date)
 
 print(consumo[:10])
-```python
+```
 
 Los datos son el consumo por hora en Watt-horas. En este caso tendremos los
 dato de una semana, que son 7 por 24, 168 valores. Si sumamos y dividimos
@@ -97,11 +97,7 @@ until_date = date.today() - timedelta(days=1)
 consumo = connection.consumption(from_date, until_date)
 
 print(consumo[:10])
-```python
-
-Los datos son el consumo por hora en Watt-horas. En este caso tendremos los
-dato de una semana, que son 7 por 24, 168 valores. Si sumamos y dividimos
-por 1000, tenemos el consumo de una semana en kWh.
+```
 
 The values are the consumption in Watt-hours. In this case, we have the data
 of one week, which are 7 times 24, 168 values. If we sum and divide by 1000,
