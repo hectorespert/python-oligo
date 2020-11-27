@@ -35,6 +35,8 @@ class Iber:
     __obtener_escenario_url = __domain + "/consumidores/rest/escenarioNew/refrescarEscenario/"
     __guardar_escenario_url = __domain + "/consumidores/rest/escenarioNew/confirmarMedicionOnLine/{}/1/{}"
     __borrar_escenario_url = __domain + "/consumidores/rest/escenarioNew/borrarEscenario/"
+    __obtener_periodo_url = __domain + "/consumidores/rest/consumoNew/obtenerDatosConsumoPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/" # date format: 07-11-2020 - that's 7 Nov 2020
+
     __headers = {
         'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/77.0.3865.90 Chrome/77.0.3865.90 Safari/537.36",
         'accept': "application/json; charset=utf-8",
@@ -180,4 +182,40 @@ class Iber:
         if response.status_code != 200:
             raise ResponseException
         return True
+    
+    def _consumption_raw(self, start, end):
+        self.__check_session()
+        start_str = start.strftime('%d-%m-%Y')
+        end_str = end.strftime('%d-%m-%Y')
+        
+        response = self.__session.request("GET", self.__obtener_periodo_url.format(start_str, end_str), headers=self.__headers)
+        if response.status_code != 200:
+            raise ResponseException
+        if not response.text:
+            raise NoResponseException
+        return response.json()
+
+    # Get consumption data from a time period
+    #
+    # start/end: datetime.date objects indicating the time period (both inclusive)
+    # The supported time range seems to be (not documented) from Jan 1 in the previous year and a max
+    # length of one year.
+    #
+    # Returns a list of consumptions starting a midnight on the start day until 23:00 on the last day.
+    # Each value is the hourly consumption in Wh.
+    def consumption(self, start, end):
+        json = self._consumption_raw(start, end)
+        values = []
+        for x in json['y']['data'][0]:
+            if x is None:
+                values.append(None)
+            else:
+                values.append(float(x['valor']))
+        return values
+        
+    # Get total consumption in Wh (Watt-hour) over a time period
+    #
+    # start/end: datetime.date objects indicating the time period (both inclusive)
+    def total_consumption(self, start, end):
+        return float(self._consumption_raw(start, end)['acumulado'])
 
