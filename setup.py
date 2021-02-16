@@ -14,6 +14,7 @@ setuptools.setup(
     url="https://github.com/hectorespert/python-oligo",
     packages=setuptools.find_packages(),
     install_requires=[
+        'aiohttp',
         'requests',
     ],
     classifiers=[
