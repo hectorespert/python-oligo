@@ -1,7 +1,10 @@
-import aiohttp
-import asyncio
+try:
+    import aiohttp
+except ImportError:
+    raise RuntimeError("AsyncIber requires aiohttp")
+
 from datetime import datetime
-from typing import Iterable, Union, Optional
+from typing import Union, Optional
 
 LOGIN_URL = "loginNew/login"
 WATTHOURMETER_URL = "escenarioNew/obtenerMedicionOnline/24"
@@ -36,7 +39,7 @@ class SelectContractException(Exception):
     pass
 
 
-class AIOIber:
+class AsyncIber:
     def __init__(self) -> None:
         """Iber class __init__ method."""
         self.__session = None

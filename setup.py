@@ -1,22 +1,24 @@
-import setuptools
+from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setuptools.setup(
+setup(
     name="oligo",
-    version="1.2.0",
+    version="1.3.0",
     author="hectorespert",
     author_email="hectorespertpardo@gmail.com",
     description="UNOFFICIAL Python client for i-DE",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/hectorespert/python-oligo",
-    packages=setuptools.find_packages(),
+    packages=find_packages(),
     install_requires=[
-        'aiohttp',
-        'requests',
+        'requests'
     ],
+    extras_require={
+        'asyncio':  ['aiohttp']
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

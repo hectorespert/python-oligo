@@ -1,13 +1,13 @@
 import unittest
 
-from oligo import AIOIber
+from oligo.asyncio import AsyncIber
 
 
-class TestIber(unittest.TestCase):
+class TestAsyncIber(unittest.TestCase):
 
     def test_instance(self):
-        instance = AIOIber()
-        self.assertIsInstance(instance, AIOIber)
+        instance = AsyncIber()
+        self.assertIsInstance(instance, AsyncIber)
 
 
 if __name__ == '__main__':
