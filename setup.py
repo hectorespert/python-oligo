@@ -5,7 +5,8 @@ with open("README.md", "r") as fh:
 
 setup(
     name="oligo",
-    version="1.3.0",
+    version_config=True,
+    setup_requires=['setuptools-git-versioning'],
     author="hectorespert",
     author_email="hectorespertpardo@gmail.com",
     description="UNOFFICIAL Python client for i-DE",
