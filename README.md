@@ -10,6 +10,11 @@
 ```
 pip install oligo
 ```
+#### Async support:
+
+```
+pip install oligo[asyncio]
+```
 ### Ejemplos:
 
 #### Consultar consumo actual (Sync):
@@ -27,10 +32,11 @@ print(watt)
 #### Consultar consumo actual (ASync):
 
 ```python
-from oligo import AIOIber
+import asyncio
+from oligo.asyncio import AsyncIber
 
 async def main():
-    connection = AIOIber()
+    connection = AsyncIber()
     await connection.login("user", "password")
 
     watt = await connection.watthourmeter()
@@ -52,10 +58,11 @@ print(status)
 #### Consultar estado ICP interno (ASync):
 
 ```python
-from oligo import AIOIber
+import asyncio
+from oligo.asyncio import AsyncIber
 
 async def main():
-    connection = AIOIber()
+    connection = AsyncIber()
     await connection.login("user", "password")
     status = await connection.icpstatus()
     print(status)
@@ -83,11 +90,12 @@ print(consumo[:10])
 #### Obtener el consumo horario durante un periodo (ASync)
 
 ```python
-from oligo import AIOIber
+import asyncio
+from oligo.asyncio import AsyncIber
 from datetime import date, timedelta
 
 async def main():
-    connection = AIOIber()
+    connection = AsyncIber()
     await connection.login("user", "password")
 
     from_date = date.today() - timedelta(days=7)
@@ -125,10 +133,11 @@ print(watt)
 #### Obtain current consumption (ASync):
 
 ```python
-from oligo import AIOIber
+import asyncio
+from oligo.asyncio import AsyncIber
 
 async def main():
-    connection = AIOIber()
+    connection = AsyncIber()
     await connection.login("user", "password")
 
     watt = await connection.watthourmeter()
@@ -150,10 +159,11 @@ print(status)
 #### Get ICP status (ASync):
 
 ```python
-from oligo import AIOIber
+import asyncio
+from oligo.asyncio import AsyncIber
 
 async def main():
-    connection = AIOIber()
+    connection = AsyncIber()
     await connection.login("user", "password")
     status = await connection.icpstatus()
     print(status)
@@ -181,11 +191,12 @@ print(consumo[:10])
 #### Retrieve the hourly consumption during a time period (Async)
 
 ```python
-from oligo import AIOIber
+import asyncio
+from oligo.asyncio import AsyncIber
 from datetime import date, timedelta
 
 async def main():
-    connection = AIOIber()
+    connection = AsyncIber()
     await connection.login("user", "password")
 
     from_date = date.today() - timedelta(days=7)
