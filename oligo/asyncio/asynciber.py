@@ -105,7 +105,7 @@ class AsyncIber:
 
     async def watthourmeter(self) -> float:
         """Returns your current power consumption."""
-        return await self.measurement()["consumption"]
+        return (await self.measurement())["consumption"]
 
     async def icpstatus(self) -> bool:
         """Returns the status of your ICP."""

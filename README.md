@@ -41,6 +41,7 @@ async def main():
 
     watt = await connection.watthourmeter()
     print(watt)
+    await connection.close()
 
 asyncio.run(main())
 ```
