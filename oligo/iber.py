@@ -44,13 +44,13 @@ class Iber:
         'cache-control': "no-cache"
     }
 
-    def __init__(self):
+    def __init__(self, session=None):
         """Iber class __init__ method."""
-        self.__session = None
+        self.__session = session
 
-    def login(self, user, password):
+    def login(self, user, password, session=Session()):
         """Creates session with your credentials"""
-        self.__session = Session()
+        self.__session = session
         login_data = "[\"{}\",\"{}\",null,\"Linux -\",\"PC\",\"Chrome 77.0.3865.90\",\"0\",\"\",\"s\"]".format(user, password)
         response = self.__session.request("POST", self.__login_url, data=login_data, headers=self.__headers)
         if response.status_code != 200:
