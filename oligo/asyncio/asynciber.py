@@ -17,6 +17,7 @@ OBTENER_ESCENARIO_URL = "escenarioNew/refrescarEscenario/"
 GUARDAR_ESCENARIO_URL = "escenarioNew/confirmarMedicionOnLine/{}/1/{}"
 BORRAR_ESCENARIO_URL = "escenarioNew/borrarEscenario/"
 OBTENER_PERIODO_URL = "consumoNew/obtenerDatosConsumoPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
+OBTENER_PERIODO_GENERACION_URL = "consumoNew/obtenerDatosGeneracionPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
 
 
 class ResponseException(Exception):
@@ -173,6 +174,25 @@ class AsyncIber:
     # Each value is the hourly consumption in Wh.
     async def consumption(self, start: datetime, end: datetime) -> list:
         data = await self._consumption_raw(start, end)
+        return [float(x["valor"]) for x in data["y"]["data"][0] if x]
+
+    async def _production_raw(self, start: datetime, end: datetime) -> list:
+        return await self.__request(
+            OBTENER_PERIODO_GENERACION_URL.format(
+                start.strftime("%d-%m-%Y"), end.strftime("%d-%m-%Y")
+            )
+        )
+
+    # Get production data from a time period
+    #
+    # start/end: datetime.date objects indicating the time period (both inclusive)
+    # The supported time range seems to be (not documented) from Jan 1 in the previous year and a max
+    # length of one year.
+    #
+    # Returns a list of production starting a midnight on the start day until 23:00 on the last day.
+    # Each value is the hourly production in Wh.
+    async def production(self, start: datetime, end: datetime) -> list:
+        data = await self._production_raw(start, end)
         return [float(x["valor"]) for x in data["y"]["data"][0] if x]
 
     # Get total consumption in Wh (Watt-hour) over a time period
