@@ -36,6 +36,7 @@ class Iber:
     __guardar_escenario_url = __domain + "/consumidores/rest/escenarioNew/confirmarMedicionOnLine/{}/1/{}"
     __borrar_escenario_url = __domain + "/consumidores/rest/escenarioNew/borrarEscenario/"
     __obtener_periodo_url = __domain + "/consumidores/rest/consumoNew/obtenerDatosConsumoPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/" # date format: 07-11-2020 - that's 7 Nov 2020
+    __obtener_periodo_generacion_url = __domain + "/consumidores/rest/consumoNew/obtenerDatosGeneracionPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"  # date format: 07-11-2020 - that's 7 Nov 2020
 
     __headers = {
         'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/77.0.3865.90 Chrome/77.0.3865.90 Safari/537.36",
@@ -205,6 +206,37 @@ class Iber:
     # Each value is the hourly consumption in Wh.
     def consumption(self, start, end):
         json = self._consumption_raw(start, end)
+        values = []
+        for x in json['y']['data'][0]:
+            if x is None:
+                values.append(None)
+            else:
+                values.append(float(x['valor']))
+        return values
+
+    def _production_raw(self, start, end):
+        self.__check_session()
+        start_str = start.strftime('%d-%m-%Y')
+        end_str = end.strftime('%d-%m-%Y')
+
+        response = self.__session.request("GET", self.__obtener_periodo_generacion_url.format(start_str, end_str),
+                                          headers=self.__headers)
+        if response.status_code != 200:
+            raise ResponseException
+        if not response.text:
+            raise NoResponseException
+        return response.json()
+
+    # Get production data from a time period
+    #
+    # start/end: datetime.date objects indicating the time period (both inclusive)
+    # The supported time range seems to be (not documented) from Jan 1 in the previous year and a max
+    # length of one year.
+    #
+    # Returns a list of productions starting a midnight on the start day until 23:00 on the last day.
+    # Each value is the hourly production in Wh.
+    def production(self, start, end):
+        json = self._production_raw(start, end)
         values = []
         for x in json['y']['data'][0]:
             if x is None:
