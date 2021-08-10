@@ -35,7 +35,8 @@ class Iber:
     __obtener_escenario_url = __domain + "/consumidores/rest/escenarioNew/refrescarEscenario/"
     __guardar_escenario_url = __domain + "/consumidores/rest/escenarioNew/confirmarMedicionOnLine/{}/1/{}"
     __borrar_escenario_url = __domain + "/consumidores/rest/escenarioNew/borrarEscenario/"
-    __obtener_periodo_url = __domain + "/consumidores/rest/consumoNew/obtenerDatosConsumoPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/" # date format: 07-11-2020 - that's 7 Nov 2020
+    __obtnere_limites_fechas_url = __domain + "/consumidores/rest/consumoNew/obtenerLimiteFechasConsumo"
+    __obtener_periodo_url = __domain + "/consumidores/rest/consumoNew/obtenerDatosConsumoDH/{}/{}/{}/"  # date format: 07-11-2020 - that's 7 Nov 2020
     __obtener_periodo_generacion_url = __domain + "/consumidores/rest/consumoNew/obtenerDatosGeneracionPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"  # date format: 07-11-2020 - that's 7 Nov 2020
 
     __headers = {
@@ -183,19 +184,24 @@ class Iber:
         if response.status_code != 200:
             raise ResponseException
         return True
-    
-    def _consumption_raw(self, start, end):
+
+    def _consumption_period_raw(self, period, start, end):
         self.__check_session()
         start_str = start.strftime('%d-%m-%Y')
         end_str = end.strftime('%d-%m-%Y')
         
-        response = self.__session.request("GET", self.__obtener_periodo_url.format(start_str, end_str), headers=self.__headers)
+
+        if period == "days":
+            period_name = "dias"
+        elif period == "hours":
+            period_name = "horas"
+
+        response = self.__session.request("GET", self.__obtener_periodo_url.format(start_str, end_str, period_name), headers=self.__headers)
         if response.status_code != 200:
             raise ResponseException
         if not response.text:
             raise NoResponseException
         return response.json()
-
     # Get consumption data from a time period
     #
     # start/end: datetime.date objects indicating the time period (both inclusive)
@@ -205,13 +211,17 @@ class Iber:
     # Returns a list of consumptions starting a midnight on the start day until 23:00 on the last day.
     # Each value is the hourly consumption in Wh.
     def consumption(self, start, end):
-        json = self._consumption_raw(start, end)
+        return self.consumption_period("hours", start, end)
+
+    def consumption_period(self, period, start, end):
+        json = self._consumption_period_raw(period, start, end)
+        print(json[0])
         values = []
-        for x in json['y']['data'][0]:
+        for x in json[0]['valores']:
             if x is None:
                 values.append(None)
             else:
-                values.append(float(x['valor']))
+                values.append(float(x))
         return values
 
     def _production_raw(self, start, end):
@@ -242,12 +252,14 @@ class Iber:
             if x is None:
                 values.append(None)
             else:
-                values.append(float(x['valor']))
+                values.append(float(x))
         return values
         
     # Get total consumption in Wh (Watt-hour) over a time period
     #
     # start/end: datetime.date objects indicating the time period (both inclusive)
     def total_consumption(self, start, end):
-        return float(self._consumption_raw(start, end)['acumulado'])
+        return self.total_consumption_period("hours", start, end)
 
+    def total_consumption_period(self, period, start, end):
+        return float(self._consumption_period_raw(period, start, end)[0]['total'])
