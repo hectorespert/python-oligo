@@ -67,11 +67,11 @@ class Iber:
             raise SessionException("Session required, use login() method to obtain a session")
 
     def measurement(self):
-        """Returns a measurement from the powermeter."""  
+        """Returns a measurement from the powermeter."""
         self.__check_session()
         response = self.__session.request("GET", self.__watthourmeter_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -91,7 +91,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("POST", self.__icp_status_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -104,7 +104,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("GET", self.__contracts_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -115,7 +115,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("GET", self.__contract_detail_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         return response.json()
@@ -124,7 +124,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("GET", self.__contract_selection_url + id, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -135,7 +135,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("GET", self.__obtener_escenarios_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -149,7 +149,7 @@ class Iber:
         get_data = "{{\"nomEscenario\":\"{}\"}}".format(name)
         response = self.__session.request("POST", self.__obtener_escenario_url, data=get_data, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -167,7 +167,7 @@ class Iber:
         save_data = "{{\"nomEscenario\":\"{}\",\"descripcion\":\"{}\"}}".format(name, description)
         response = self.__session.request("POST", self.__guardar_escenario_url.format(consumption, measurement_id), data=save_data, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -181,17 +181,17 @@ class Iber:
         delete_data = "{{\"nomEscenario\":\"{}\"}}".format(name)
         response = self.__session.request("POST", self.__borrar_escenario_url, data=delete_data, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         return True
-    
+
     def _consumption_raw(self, start, end):
         self.__check_session()
         start_str = start.strftime('%d-%m-%Y')
         end_str = end.strftime('%d-%m-%Y')
-        
+
         response = self.__session.request("GET", self.__obtener_periodo_url.format(start_str, end_str), headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         return response.json()
@@ -222,7 +222,7 @@ class Iber:
         response = self.__session.request("GET", self.__obtener_periodo_generacion_url.format(start_str, end_str),
                                           headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException
+            raise ResponseException("Response error, code: {}".format(response.status_code))
         if not response.text:
             raise NoResponseException
         return response.json()
@@ -244,10 +244,9 @@ class Iber:
             else:
                 values.append(float(x['valor']))
         return values
-        
+
     # Get total consumption in Wh (Watt-hour) over a time period
     #
     # start/end: datetime.date objects indicating the time period (both inclusive)
     def total_consumption(self, start, end):
         return float(self._consumption_raw(start, end)['acumulado'])
-
