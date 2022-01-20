@@ -1,3 +1,5 @@
+from deprecated.classic import deprecated
+
 from ..exception import SessionException, ResponseException, NoResponseException, LoginException, \
     SelectContractException
 
@@ -80,11 +82,21 @@ class AsyncIber:
         data = await self.__request(WATTHOURMETER_URL)
         return {
             "id": data["codSolicitudTGT"],
+            "meter": data["valLecturaContador"],
             "consumption": data["valMagnitud"],
             "icp": data["valInterruptor"],
             "raw_response": data,
         }
 
+    async def current_kilowatt_hour_read(self) -> float:
+        """Returns the current read of the electricity meter."""
+        return (await self.measurement())["meter"]
+
+    async def current_power_consumption(self) -> float:
+        """Returns your current power consumption."""
+        return (await self.measurement())["consumption"]
+
+    @deprecated("Use 'current_power_consumption' method instead")
     async def watthourmeter(self) -> float:
         """Returns your current power consumption."""
         return (await self.measurement())["consumption"]
