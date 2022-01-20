@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from deprecated.classic import deprecated
+
 try:
     from requests import Session
 except ImportError:
@@ -64,14 +66,24 @@ class Iber:
         json_response = response.json()
         return {
             "id": json_response['codSolicitudTGT'],
+            "meter": json_response["valLecturaContador"],
             "consumption": json_response['valMagnitud'],
             "icp": json_response['valInterruptor'],
-            "raw_response" : json_response
+            "raw_response": json_response
         }
 
-    def watthourmeter(self):
+    def current_kilowatt_hour_read(self):
+        """Returns the current read of the electricity meter."""
+        return self.measurement()["meter"]
+
+    def current_power_consumption(self):
         """Returns your current power consumption."""
         return self.measurement()['consumption']
+
+    @deprecated("Use 'current_power_consumption' method instead")
+    def watthourmeter(self):
+        """Returns your current power consumption."""
+        return self.current_power_consumption()
 
     def icpstatus(self):
         """Returns the status of your ICP."""
