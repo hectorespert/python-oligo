@@ -7,14 +7,18 @@
 ## [ES] Cliente Python (NO OFICIAL) para i-DE (Iberdrola distribución).
 ### Instalación:
 
+#### Requests support:
+
 ```
-pip install oligo
+pip install oligo[requests]
 ```
+
 #### Async support:
 
 ```
 pip install oligo[asyncio]
 ```
+
 ### Ejemplos:
 
 #### Consultar consumo actual (Sync):
