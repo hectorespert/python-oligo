@@ -1,8 +1,11 @@
 from datetime import datetime
 
-from requests import Session
+try:
+    from requests import Session
+except ImportError:
+    raise RuntimeError("Iber requires requests module")
 
-from .exception import LoginException, ResponseException, NoResponseException, SelectContractException, SessionException
+from oligo.exception import LoginException, ResponseException, NoResponseException, SelectContractException, SessionException
 
 
 class Iber:

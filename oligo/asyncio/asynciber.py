@@ -4,7 +4,7 @@ from oligo.exception import SessionException, ResponseException, NoResponseExcep
 try:
     import aiohttp
 except ImportError:
-    raise RuntimeError("AsyncIber requires aiohttp")
+    raise RuntimeError("AsyncIber requires aiohttp module")
 
 from datetime import datetime
 from typing import Union, Optional

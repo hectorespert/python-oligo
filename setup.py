@@ -14,10 +14,9 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/hectorespert/python-oligo",
     packages=find_packages(),
-    install_requires=[
-        'requests'
-    ],
+    install_requires=[],
     extras_require={
+        'requests': ['requests'],
         'asyncio':  ['aiohttp']
     },
     classifiers=[
