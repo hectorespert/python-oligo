@@ -1,3 +1,6 @@
+from oligo.exception import SessionException, ResponseException, NoResponseException, LoginException, \
+    SelectContractException
+
 try:
     import aiohttp
 except ImportError:
@@ -20,26 +23,6 @@ OBTENER_PERIODO_URL = "consumoNew/obtenerDatosConsumoPeriodo/fechaInicio/{}00:00
 OBTENER_PERIODO_GENERACION_URL = "consumoNew/obtenerDatosGeneracionPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
 
 
-class ResponseException(Exception):
-    pass
-
-
-class LoginException(Exception):
-    pass
-
-
-class SessionException(Exception):
-    pass
-
-
-class NoResponseException(Exception):
-    pass
-
-
-class SelectContractException(Exception):
-    pass
-
-
 class AsyncIber:
     def __init__(self) -> None:
         """Iber class __init__ method."""
@@ -52,9 +35,7 @@ class AsyncIber:
         self, path: str, data: Optional[Union[list, dict]] = None
     ) -> dict:
         if not self.__session:
-            raise SessionException(
-                "Session required, use login() method to obtain a session"
-            )
+            raise SessionException()
         if data is None:
             response = await self.__session.get(
                 f"https://www.i-de.es/consumidores/rest/{path}",
@@ -68,7 +49,7 @@ class AsyncIber:
             )
         if response.status != 200:
             self.__session = None
-            raise ResponseException("Response error, code: {}".format(response.status))
+            raise ResponseException(response.status)
         data = await response.json()
         if not data:
             raise NoResponseException
@@ -91,7 +72,7 @@ class AsyncIber:
         data = await self.__request(LOGIN_URL, data=payload)
         if data["success"] != "true":
             self.__session = None
-            raise LoginException("Login error, bad login")
+            raise LoginException()
         return True
 
     async def measurement(self) -> dict:
