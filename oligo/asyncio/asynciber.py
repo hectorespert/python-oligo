@@ -1,4 +1,4 @@
-from oligo.exception import SessionException, ResponseException, NoResponseException, LoginException, \
+from ..exception import SessionException, ResponseException, NoResponseException, LoginException, \
     SelectContractException
 
 try:

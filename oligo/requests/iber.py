@@ -5,7 +5,8 @@ try:
 except ImportError:
     raise RuntimeError("Iber requires requests module")
 
-from oligo.exception import LoginException, ResponseException, NoResponseException, SelectContractException, SessionException
+from ..exception import LoginException, ResponseException, NoResponseException, SelectContractException, \
+    SessionException
 
 
 class Iber:
