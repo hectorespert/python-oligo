@@ -1,5 +1,6 @@
-from requests import Session
 from datetime import datetime
+
+from requests import Session
 
 from .exception import LoginException, ResponseException, NoResponseException, SelectContractException, SessionException
 
@@ -38,22 +39,22 @@ class Iber:
         response = self.__session.request("POST", self.__login_url, data=login_data, headers=self.__headers)
         if response.status_code != 200:
             self.__session = None
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         json_response = response.json()
         if json_response["success"] != "true":
             self.__session = None
-            raise LoginException("Login error, bad login")
+            raise LoginException()
 
     def __check_session(self):
         if not self.__session:
-            raise SessionException("Session required, use login() method to obtain a session")
+            raise SessionException()
 
     def measurement(self):
         """Returns a measurement from the powermeter."""
         self.__check_session()
         response = self.__session.request("GET", self.__watthourmeter_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -73,7 +74,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("POST", self.__icp_status_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -86,7 +87,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("GET", self.__contracts_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -97,7 +98,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("GET", self.__contract_detail_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         return response.json()
@@ -106,7 +107,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("GET", self.__contract_selection_url + id, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -117,7 +118,7 @@ class Iber:
         self.__check_session()
         response = self.__session.request("GET", self.__obtener_escenarios_url, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -131,7 +132,7 @@ class Iber:
         get_data = "{{\"nomEscenario\":\"{}\"}}".format(name)
         response = self.__session.request("POST", self.__obtener_escenario_url, data=get_data, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -149,7 +150,7 @@ class Iber:
         save_data = "{{\"nomEscenario\":\"{}\",\"descripcion\":\"{}\"}}".format(name, description)
         response = self.__session.request("POST", self.__guardar_escenario_url.format(consumption, measurement_id), data=save_data, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         json_response = response.json()
@@ -163,7 +164,7 @@ class Iber:
         delete_data = "{{\"nomEscenario\":\"{}\"}}".format(name)
         response = self.__session.request("POST", self.__borrar_escenario_url, data=delete_data, headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         return True
 
     def _consumption_raw(self, start, end):
@@ -173,7 +174,7 @@ class Iber:
 
         response = self.__session.request("GET", self.__obtener_periodo_url.format(start_str, end_str), headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         return response.json()
@@ -204,7 +205,7 @@ class Iber:
         response = self.__session.request("GET", self.__obtener_periodo_generacion_url.format(start_str, end_str),
                                           headers=self.__headers)
         if response.status_code != 200:
-            raise ResponseException("Response error, code: {}".format(response.status_code))
+            raise ResponseException(response.status_code)
         if not response.text:
             raise NoResponseException
         return response.json()
