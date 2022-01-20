@@ -4,7 +4,7 @@ from requests import Session
 from requests_mock import Adapter
 
 from oligo import Iber
-from oligo.iber import LoginException, ResponseException
+from oligo.exception import LoginException, ResponseException
 
 
 class TestIber(unittest.TestCase):

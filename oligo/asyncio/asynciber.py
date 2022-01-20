@@ -1,3 +1,6 @@
+from oligo.exception import SessionException, ResponseException, NoResponseException, LoginException, \
+    SelectContractException
+
 try:
     import aiohttp
 except ImportError:
@@ -18,26 +21,6 @@ GUARDAR_ESCENARIO_URL = "escenarioNew/confirmarMedicionOnLine/{}/1/{}"
 BORRAR_ESCENARIO_URL = "escenarioNew/borrarEscenario/"
 OBTENER_PERIODO_URL = "consumoNew/obtenerDatosConsumoPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
 OBTENER_PERIODO_GENERACION_URL = "consumoNew/obtenerDatosGeneracionPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
-
-
-class ResponseException(Exception):
-    pass
-
-
-class LoginException(Exception):
-    pass
-
-
-class SessionException(Exception):
-    pass
-
-
-class NoResponseException(Exception):
-    pass
-
-
-class SelectContractException(Exception):
-    pass
 
 
 class AsyncIber:
