@@ -1,7 +1,7 @@
 from requests import Session
 from datetime import datetime
 
-from .exception import LoginException, ResponseException, NoResponseException, SelectContractException
+from .exception import LoginException, ResponseException, NoResponseException, SelectContractException, SessionException
 
 
 class Iber:
