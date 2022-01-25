@@ -49,7 +49,7 @@ class Iber:
         json_response = response.json()
         if json_response["success"] != "true":
             self.__session = None
-            raise LoginException()
+            raise LoginException(user)
 
     def __check_session(self):
         if not self.__session:
