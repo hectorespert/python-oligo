@@ -13,8 +13,8 @@ class TestResponseException(unittest.TestCase):
 class TestLoginException(unittest.TestCase):
 
     def test_message(self):
-        login_exception = LoginException()
-        self.assertEqual('Login error, bad login', login_exception.args[0])
+        login_exception = LoginException("pepe")
+        self.assertEqual('Unable to log in with user pepe', login_exception.args[0])
 
 
 class TestSessionException(unittest.TestCase):

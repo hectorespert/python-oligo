@@ -8,8 +8,8 @@ class ResponseException(IberException):
 
 
 class LoginException(IberException):
-    def __init__(self):
-        super().__init__('Login error, bad login')
+    def __init__(self, username):
+        super().__init__(f'Unable to log in with user {username}')
 
 
 class SessionException(IberException):

@@ -31,7 +31,8 @@ class AsyncIber:
         self.__session = None
 
     async def close(self):
-        await self.__session.close()
+        if self.__session:
+            await self.__session.close()
 
     async def __request(
         self, path: str, data: Optional[Union[list, dict]] = None
@@ -73,8 +74,9 @@ class AsyncIber:
         ]
         data = await self.__request(LOGIN_URL, data=payload)
         if data["success"] != "true":
+            await self.__session.close()
             self.__session = None
-            raise LoginException()
+            raise LoginException(user)
         return True
 
     async def measurement(self) -> dict:
