@@ -51,6 +51,7 @@ class AsyncIber:
                 headers={"accept": "application/json; charset=utf-8"},
             )
         if response.status != 200:
+            await self.__session.close()
             self.__session = None
             raise ResponseException(response.status)
         data = await response.json()
