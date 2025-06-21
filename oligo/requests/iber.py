@@ -28,10 +28,15 @@ class Iber:
     __obtener_periodo_generacion_url = __domain + "/consumidores/rest/consumoNew/obtenerDatosGeneracionPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"  # date format: 07-11-2020 - that's 7 Nov 2020
 
     __headers = {
-        'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/77.0.3865.90 Chrome/77.0.3865.90 Safari/537.36",
-        'accept': "application/json; charset=utf-8",
-        'content-type': "application/json; charset=utf-8",
-        'cache-control': "no-cache"
+        "Content-Type": "application/json; charset=utf-8",
+        "esVersionNueva": "1",
+        "idioma": "es",
+        "movilAPP": "si",
+        "tipoAPP": "ios",
+        "User-Agent": (
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 11_4_1 like Mac OS X) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15G77"
+        ),
     }
 
     def __init__(self, session=None):
@@ -41,8 +46,19 @@ class Iber:
     def login(self, user, password, session=Session()):
         """Creates session with your credentials"""
         self.__session = session
-        login_data = "[\"{}\",\"{}\",null,\"Linux -\",\"PC\",\"Chrome 77.0.3865.90\",\"0\",\"\",\"s\"]".format(user, password)
-        response = self.__session.request("POST", self.__login_url, data=login_data, headers=self.__headers)
+        login_data = [
+            user,
+            password,
+            "",
+            "Android 6.0",
+            "Móvil",
+            "Chrome 119.0.0.0",
+            "0",
+            "",
+            "s",
+            "",
+        ]
+        response = self.__session.request("POST", self.__login_url, headers=self.__headers, json=login_data)
         if response.status_code != 200:
             self.__session = None
             raise ResponseException(response.status_code)
