@@ -6,6 +6,9 @@ with open("README.md", "r") as fh:
 setup(
     name="oligo",
     version_config=True,
+    setuptools_git_versioning={
+        "enabled": True,
+    },
     setup_requires=['setuptools-git-versioning'],
     author="hectorespert",
     author_email="hectorespertpardo@gmail.com",
