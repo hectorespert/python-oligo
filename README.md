@@ -118,9 +118,6 @@ Los datos son el consumo por hora en Watt-horas. En este caso tendremos los
 dato de una semana, que son 7 por 24, 168 valores. Si sumamos y dividimos
 por 1000, tenemos el consumo de una semana en kWh.
 
-### Integraciones:
-- Integración para Home Assistan: [ad-ha/ide_api](https://github.com/ad-ha/ide_api)
-
 ## [EN] Python client (UNOFFICIAL) for i-DE (Iberdrola distribución).
 ### Install:
 
