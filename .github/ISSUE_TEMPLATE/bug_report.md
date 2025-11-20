@@ -1,9 +1,10 @@
 ---
 name: Bug report / Informe de error
 about: Reportar un error reproducible (modo mantenimiento: SOLO bugs) / Report a reproducible bug (maintenance mode: BUGS ONLY)
-title: '[Bug] Breve título descriptivo'
-labels: bug
+title: ''
+labels: ''
 assignees: ''
+
 ---
 
 > [!WARNING]
