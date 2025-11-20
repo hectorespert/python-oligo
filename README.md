@@ -6,6 +6,10 @@
 
 ## [ES] Cliente Python (NO OFICIAL) para i-DE (Iberdrola distribución).
 
+> [!WARNING]
+> Esta librería está en modo mantenimiento. 
+> No se añadirán nuevas funcionalidades, solo se corregirán errores mientras el api web de i-DE siga funcionando de la misma manera.
+
 ### Instalación:
 
 #### Requests support:
@@ -119,6 +123,12 @@ dato de una semana, que son 7 por 24, 168 valores. Si sumamos y dividimos
 por 1000, tenemos el consumo de una semana en kWh.
 
 ## [EN] Python client (UNOFFICIAL) for i-DE (Iberdrola distribución).
+
+> [!WARNING]
+> This library is in maintenance mode. 
+> No new features will be added, only bugs will be fixed while the i-DE web api
+> continues to work in the same way.
+
 ### Install:
 
 ```
