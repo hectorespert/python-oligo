@@ -1,38 +1,46 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
+name: Issue template
+about: Generic issue template (maintenance mode: ONLY reproducible bugs) / Plantilla genérica (modo mantenimiento: SOLO bugs reproducibles)
+title: '[Issue] Breve título'
+labels: bug
 assignees: ''
-
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+> [!WARNING]
+> ES: Esta librería está en MODO MANTENIMIENTO. Solo se aceptarán informes de errores reproducibles. Solicitudes de nuevas funcionalidades o soporte extendido serán cerradas.
+> EN: This library is in MAINTENANCE MODE. Only reproducible bug reports will be accepted. New feature requests or extended support will be closed.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+### Descripción / Description
+Explica el problema de forma clara.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+### Pasos para reproducir / Steps to reproduce
+1.
+2.
+3.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Comportamiento esperado / Expected behavior
+¿Qué debería ocurrir?
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+### Comportamiento actual / Current behavior
+¿Qué ocurre realmente?
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+### Logs / Traceback
+```text
+(pega aquí)
+```
 
-**Additional context**
-Add any other context about the problem here.
+### Entorno / Environment
+- Python versión:
+- SO / OS:
+- Versión oligo:
+- Método instalación (pip/poetry):
+
+### Código mínimo / Minimal code
+```python
+# fragmento mínimo que reproduce el problema
+```
+
+### Notas adicionales / Additional notes
+Información extra relevante.
+
+<!-- Gracias por seguir las directrices de mantenimiento. -->
