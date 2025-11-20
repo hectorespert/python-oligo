@@ -16,6 +16,11 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/hectorespert/python-oligo",
+    project_urls={
+        "Source": "https://github.com/hectorespert/python-oligo",
+        "Issues": "https://github.com/hectorespert/python-oligo/issues",
+        "Documentation": "https://github.com/hectorespert/python-oligo#readme",
+    },
     packages=find_packages(),
     install_requires=[
         'deprecated'
@@ -25,9 +30,11 @@ setup(
         'asyncio':  ['aiohttp']
     },
     classifiers=[
+        "Development Status :: 7 - Inactive",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    keywords=["i-DE", "iberdrola", "energy", "client"],
     python_requires='>=3.6',
 )
