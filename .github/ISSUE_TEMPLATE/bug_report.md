@@ -7,32 +7,47 @@ assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+> [!WARNING]
+> ES: Librería en MODO MANTENIMIENTO. Solo se procesarán bugs reproducibles con información suficiente.
+> EN: Library in MAINTENANCE MODE. Only reproducible bugs with enough info will be processed.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+### Descripción / Description
+Resumen claro del error.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+### Pasos para reproducir / Steps to reproduce
+1. 
+2. 
+3. 
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Resultado actual / Current behavior
+¿Qué ocurre?
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+### Resultado esperado / Expected behavior
+¿Qué esperabas que ocurriera?
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+### Evidencias / Evidence
+Logs, traceback, capturas.
 
-**Additional context**
-Add any other context about the problem here.
+```text
+(pega aquí logs/traceback)
+```
+
+### Entorno / Environment
+- Python versión:
+- SO / OS:
+- Versión de oligo (pip show oligo):
+- Método instalación (pip/poetry):
+
+### Código mínimo reproducible / Minimal reproducible code
+```python
+# fragmento mínimo
+```
+
+### Intentos / Attempts
+¿Qué has probado ya (soluciones alternativas, investigación)?
+
+### Impacto / Impact
+Bloqueante / Degradación / Menor
+
+### Notas adicionales / Additional notes
+Información extra relevante.
