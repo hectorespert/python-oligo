@@ -1,6 +1,1 @@
 blank_issues_enabled: false
-contact_links:
-  - name: Estado de mantenimiento / Maintenance status
-    url: https://github.com/hectorespert/python-oligo#readme
-    about: 'La librería está en modo mantenimiento. Solo se aceptan bugs reproducibles. The library is in maintenance mode; only reproducible bugs are accepted.'
-

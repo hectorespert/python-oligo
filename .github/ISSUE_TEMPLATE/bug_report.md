@@ -1,46 +1,54 @@
 ---
-name: Issue template
-about: Generic issue template (maintenance mode: ONLY reproducible bugs) / Plantilla genérica (modo mantenimiento: SOLO bugs reproducibles)
-title: '[Issue] Breve título'
+name: Bug report / Informe de error
+about: Reportar un error reproducible (modo mantenimiento: SOLO bugs) / Report a reproducible bug (maintenance mode: BUGS ONLY)
+title: '[Bug] Breve título descriptivo'
 labels: bug
 assignees: ''
 ---
 
 > [!WARNING]
-> ES: Esta librería está en MODO MANTENIMIENTO. Solo se aceptarán informes de errores reproducibles. Solicitudes de nuevas funcionalidades o soporte extendido serán cerradas.
-> EN: This library is in MAINTENANCE MODE. Only reproducible bug reports will be accepted. New feature requests or extended support will be closed.
+> ES: Librería en MODO MANTENIMIENTO. Solo se procesarán bugs reproducibles con información suficiente.
+> EN: Library in MAINTENANCE MODE. Only reproducible bugs with enough info will be processed.
 
 ### Descripción / Description
-Explica el problema de forma clara.
+Resumen claro del error.
 
 ### Pasos para reproducir / Steps to reproduce
-1.
-2.
-3.
+1. 
+2. 
+3. 
 
-### Comportamiento esperado / Expected behavior
-¿Qué debería ocurrir?
+### Resultado actual / Current behavior
+¿Qué ocurre?
 
-### Comportamiento actual / Current behavior
-¿Qué ocurre realmente?
+### Resultado esperado / Expected behavior
+¿Qué esperabas que ocurriera?
 
-### Logs / Traceback
+### Evidencias / Evidence
+Logs, traceback, capturas.
+
 ```text
-(pega aquí)
+(pega aquí logs/traceback)
 ```
 
 ### Entorno / Environment
 - Python versión:
 - SO / OS:
-- Versión oligo:
+- Versión de oligo (pip show oligo):
 - Método instalación (pip/poetry):
 
-### Código mínimo / Minimal code
+### Código mínimo reproducible / Minimal reproducible code
 ```python
-# fragmento mínimo que reproduce el problema
+# fragmento mínimo
 ```
+
+### Intentos / Attempts
+¿Qué has probado ya (soluciones alternativas, investigación)?
+
+### Impacto / Impact
+Bloqueante / Degradación / Menor
 
 ### Notas adicionales / Additional notes
 Información extra relevante.
 
-<!-- Gracias por seguir las directrices de mantenimiento. -->
+<!-- Gracias por seguir las directrices del modo mantenimiento. -->
