@@ -9,7 +9,7 @@ setup(
     setuptools_git_versioning={
         "enabled": True,
     },
-    setup_requires=['setuptools-git-versioning'],
+    setup_requires=["setuptools-git-versioning"],
     author="hectorespert",
     author_email="hectorespertpardo@gmail.com",
     description="UNOFFICIAL Python client for i-DE",
@@ -22,13 +22,8 @@ setup(
         "Documentation": "https://github.com/hectorespert/python-oligo#readme",
     },
     packages=find_packages(),
-    install_requires=[
-        'deprecated'
-    ],
-    extras_require={
-        'requests': ['requests'],
-        'asyncio':  ['aiohttp']
-    },
+    install_requires=["deprecated", "python-dotenv"],
+    extras_require={"requests": ["requests"], "asyncio": ["aiohttp"]},
     classifiers=[
         "Development Status :: 7 - Inactive",
         "Programming Language :: Python :: 3",
@@ -36,5 +31,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     keywords=["i-DE", "iberdrola", "energy", "client"],
-    python_requires='>=3.6',
+    python_requires=">=3.6",
 )

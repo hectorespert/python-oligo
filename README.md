@@ -24,6 +24,26 @@ pip install oligo[requests]
 pip install oligo[asyncio]
 ```
 
+### Autenticación
+
+Puedes pasar el usuario y la contraseña directamente o usar las variables de entorno `I-DE-USER` e `I-DE-PASSWORD` (también se admiten ficheros `.env` gracias a `python-dotenv`):
+
+```python
+from oligo import Iber
+
+connection = Iber()
+connection.login("user", "password")
+```
+
+O usando variables de entorno / `.env`:
+
+```python
+from oligo import Iber
+
+connection = Iber()
+connection.login()  # Lee I-DE-USER e I-DE-PASSWORD del entorno
+```
+
 ### Ejemplos:
 
 #### Consultar consumo actual (Sync):
@@ -118,6 +138,44 @@ async def main():
 asyncio.run(main())
 ```
 
+#### Obtener el consumo horario facturado durante un periodo (Sync)
+
+```python
+from oligo import Iber
+from datetime import date, timedelta
+
+connection = Iber()
+connection.login("user", "password")
+
+from_date = date.today() - timedelta(days=7)
+until_date = date.today() - timedelta(days=1)
+
+consumo = connection.consumption_facturado(from_date, until_date)
+
+print(consumo[:10])
+```
+
+#### Obtener el consumo horario facturado durante un periodo (ASync)
+
+```python
+import asyncio
+from oligo.asyncio import AsyncIber
+from datetime import date, timedelta
+
+async def main():
+    connection = AsyncIber()
+    await connection.login("user", "password")
+
+    from_date = date.today() - timedelta(days=7)
+    until_date = date.today() - timedelta(days=1)
+
+    consumo = await connection.consumption_facturado(from_date, until_date)
+
+    print(consumo[:10])
+
+asyncio.run(main())
+```
+
 Los datos son el consumo por hora en Watt-horas. En este caso tendremos los
 dato de una semana, que son 7 por 24, 168 valores. Si sumamos y dividimos
 por 1000, tenemos el consumo de una semana en kWh.
@@ -128,6 +186,26 @@ por 1000, tenemos el consumo de una semana en kWh.
 > This library is in maintenance mode. 
 > No new features will be added, only bugs will be fixed while the i-DE web api
 > continues to work in the same way.
+
+### Authentication
+
+You can pass the username and password directly or use the `I-DE-USER` and `I-DE-PASSWORD` environment variables (`.env` files are also supported via `python-dotenv`):
+
+```python
+from oligo import Iber
+
+connection = Iber()
+connection.login("user", "password")
+```
+
+Or using environment variables / `.env`:
+
+```python
+from oligo import Iber
+
+connection = Iber()
+connection.login()  # Reads I-DE-USER and I-DE-PASSWORD from environment
+```
 
 ### Install:
 
@@ -219,6 +297,44 @@ async def main():
     until_date = date.today() - timedelta(days=1)
 
     consumo = await connection.consumption(from_date, until_date)
+
+    print(consumo[:10])
+
+asyncio.run(main())
+```
+
+#### Retrieve the hourly billed consumption during a time period (Sync)
+
+```python
+from oligo import Iber
+from datetime import date, timedelta
+
+connection = Iber()
+connection.login("user", "password")
+
+from_date = date.today() - timedelta(days=7)
+until_date = date.today() - timedelta(days=1)
+
+consumo = connection.consumption_facturado(from_date, until_date)
+
+print(consumo[:10])
+```
+
+#### Retrieve the hourly billed consumption during a time period (Async)
+
+```python
+import asyncio
+from oligo.asyncio import AsyncIber
+from datetime import date, timedelta
+
+async def main():
+    connection = AsyncIber()
+    await connection.login("user", "password")
+
+    from_date = date.today() - timedelta(days=7)
+    until_date = date.today() - timedelta(days=1)
+
+    consumo = await connection.consumption_facturado(from_date, until_date)
 
     print(consumo[:10])
 

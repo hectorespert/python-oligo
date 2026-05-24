@@ -8,13 +8,15 @@ class ResponseException(IberException):
 
 
 class LoginException(IberException):
-    def __init__(self, username):
-        super().__init__(f'Unable to log in with user {username}')
+    def __init__(self, username, message=None):
+        if message is None:
+            message = f"Unable to log in with user {username}"
+        super().__init__(message)
 
 
 class SessionException(IberException):
     def __init__(self):
-        super().__init__('Session required, use login() method to obtain a session')
+        super().__init__("Session required, use login() method to obtain a session")
 
 
 class NoResponseException(IberException):

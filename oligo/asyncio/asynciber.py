@@ -1,7 +1,15 @@
+import os
+
+from dotenv import load_dotenv
 from deprecated.classic import deprecated
 
-from ..exception import SessionException, ResponseException, NoResponseException, LoginException, \
-    SelectContractException
+from ..exception import (
+    SessionException,
+    ResponseException,
+    NoResponseException,
+    LoginException,
+    SelectContractException,
+)
 
 try:
     import aiohttp
@@ -10,6 +18,8 @@ except ImportError:
 
 from datetime import datetime
 from typing import Union, Optional
+
+load_dotenv()
 
 LOGIN_URL = "loginNew/login"
 WATTHOURMETER_URL = "escenarioNew/obtenerMedicionOnline/24"
@@ -23,6 +33,7 @@ GUARDAR_ESCENARIO_URL = "escenarioNew/confirmarMedicionOnLine/{}/1/{}"
 BORRAR_ESCENARIO_URL = "escenarioNew/borrarEscenario/"
 OBTENER_PERIODO_URL = "consumoNew/obtenerDatosConsumoPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
 OBTENER_PERIODO_GENERACION_URL = "consumoNew/obtenerDatosGeneracionPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
+OBTENER_PERIODO_FACTURADO_URL = "consumoNew/obtenerDatosConsumoFacturado/numFactura/null//fechaDesde//{}00:00:00//fechaHasta//{}23:59:00/true/"
 
 
 class AsyncIber:
@@ -59,9 +70,18 @@ class AsyncIber:
             raise NoResponseException
         return data
 
-    async def login(self, user: str, password: str) -> bool:
-        """Creates session with your credentials"""
+    async def login(self, user: str = None, password: str = None) -> bool:
+        """Creates session with your credentials.
+        Reads I-DE-USER and I-DE-PASSWORD from environment if available,
+        falling back to the provided parameters."""
         self.__session = aiohttp.ClientSession()
+        user = os.getenv("I-DE-USER", user)
+        password = os.getenv("I-DE-PASSWORD", password)
+        if not user or not password:
+            raise LoginException(
+                user or "unknown",
+                message="Login failed: user and password are required. Set I-DE-USER and I-DE-PASSWORD environment variables or pass them as arguments.",
+            )
         payload = [
             user,
             password,
@@ -196,4 +216,28 @@ class AsyncIber:
     # start/end: datetime.date objects indicating the time period (both inclusive)
     async def total_consumption(self, start, end) -> float:
         data = await self._consumption_raw(start, end)
+        return float(data["acumulado"])
+
+    async def _consumption_facturado_raw(self, start: datetime, end: datetime) -> list:
+        return await self.__request(
+            OBTENER_PERIODO_FACTURADO_URL.format(
+                start.strftime("%d-%m-%Y"), end.strftime("%d-%m-%Y")
+            )
+        )
+
+    # Get billed consumption data from a time period
+    #
+    # start/end: datetime.date objects indicating the time period (both inclusive)
+    #
+    # Returns a list of billed consumptions starting at midnight on the start day until 23:00 on the last day.
+    # Each value is the hourly billed consumption in Wh.
+    async def consumption_facturado(self, start: datetime, end: datetime) -> list:
+        data = await self._consumption_facturado_raw(start, end)
+        return [float(x["valor"]) for x in data["y"]["data"][0] if x]
+
+    # Get total billed consumption in Wh (Watt-hour) over a time period
+    #
+    # start/end: datetime.date objects indicating the time period (both inclusive)
+    async def total_consumption_facturado(self, start, end) -> float:
+        data = await self._consumption_facturado_raw(start, end)
         return float(data["acumulado"])
