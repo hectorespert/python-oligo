@@ -76,8 +76,8 @@ class Iber:
         Reads I-DE-USER and I-DE-PASSWORD from environment if available,
         falling back to the provided parameters."""
         self.__session = session
-        user = os.getenv("I-DE-USER", user)
-        password = os.getenv("I-DE-PASSWORD", password)
+        user = user or os.getenv("I-DE-USER", user)
+        password = password or os.getenv("I-DE-PASSWORD", password)
         if not user or not password:
             raise LoginException(
                 user or "unknown",
