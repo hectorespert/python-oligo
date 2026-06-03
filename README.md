@@ -26,7 +26,7 @@ pip install oligo[asyncio]
 
 ### Autenticación
 
-Puedes pasar el usuario y la contraseña directamente o usar las variables de entorno `I-DE-USER` e `I-DE-PASSWORD` (también se admiten ficheros `.env` gracias a `python-dotenv`):
+Puedes pasar el usuario y la contraseña directamente o usar las variables de entorno `I_DE_USER` e `I_DE_PASSWORD`:
 
 ```python
 from oligo import Iber
@@ -35,13 +35,13 @@ connection = Iber()
 connection.login("user", "password")
 ```
 
-O usando variables de entorno / `.env`:
+O usando variables de entorno:
 
 ```python
 from oligo import Iber
 
 connection = Iber()
-connection.login()  # Lee I-DE-USER e I-DE-PASSWORD del entorno
+connection.login()  # Lee I_DE_USER e I_DE_PASSWORD del entorno
 ```
 
 ### Ejemplos:
@@ -150,7 +150,7 @@ connection.login("user", "password")
 from_date = date.today() - timedelta(days=7)
 until_date = date.today() - timedelta(days=1)
 
-consumo = connection.consumption_facturado(from_date, until_date)
+consumo = connection.billed_consumption(from_date, until_date)
 
 print(consumo[:10])
 ```
@@ -169,7 +169,7 @@ async def main():
     from_date = date.today() - timedelta(days=7)
     until_date = date.today() - timedelta(days=1)
 
-    consumo = await connection.consumption_facturado(from_date, until_date)
+    consumo = await connection.billed_consumption(from_date, until_date)
 
     print(consumo[:10])
 
@@ -189,7 +189,7 @@ por 1000, tenemos el consumo de una semana en kWh.
 
 ### Authentication
 
-You can pass the username and password directly or use the `I-DE-USER` and `I-DE-PASSWORD` environment variables (`.env` files are also supported via `python-dotenv`):
+You can pass the username and password directly or use the `I_DE_USER` and `I_DE_PASSWORD` environment variables:
 
 ```python
 from oligo import Iber
@@ -198,13 +198,13 @@ connection = Iber()
 connection.login("user", "password")
 ```
 
-Or using environment variables / `.env`:
+Or using environment variables:
 
 ```python
 from oligo import Iber
 
 connection = Iber()
-connection.login()  # Reads I-DE-USER and I-DE-PASSWORD from environment
+connection.login()  # Reads I_DE_USER and I_DE_PASSWORD from environment
 ```
 
 ### Install:
@@ -315,7 +315,7 @@ connection.login("user", "password")
 from_date = date.today() - timedelta(days=7)
 until_date = date.today() - timedelta(days=1)
 
-consumo = connection.consumption_facturado(from_date, until_date)
+consumo = connection.billed_consumption(from_date, until_date)
 
 print(consumo[:10])
 ```
@@ -334,7 +334,7 @@ async def main():
     from_date = date.today() - timedelta(days=7)
     until_date = date.today() - timedelta(days=1)
 
-    consumo = await connection.consumption_facturado(from_date, until_date)
+    consumo = await connection.billed_consumption(from_date, until_date)
 
     print(consumo[:10])
 

@@ -2,4 +2,3 @@ requests
 requests-mock
 aiohttp
 deprecated
-python-dotenv

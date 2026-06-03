@@ -22,7 +22,7 @@ setup(
         "Documentation": "https://github.com/hectorespert/python-oligo#readme",
     },
     packages=find_packages(),
-    install_requires=["deprecated", "python-dotenv"],
+    install_requires=["deprecated"],
     extras_require={"requests": ["requests"], "asyncio": ["aiohttp"]},
     classifiers=[
         "Development Status :: 7 - Inactive",

@@ -1,15 +1,12 @@
 import os
 from datetime import datetime
 
-from dotenv import load_dotenv
 from deprecated.classic import deprecated
 
 try:
     from requests import Session
 except ImportError:
     raise RuntimeError("Iber requires requests module")
-
-load_dotenv()
 
 from ..exception import (
     LoginException,
@@ -71,17 +68,26 @@ class Iber:
         """Iber class __init__ method."""
         self.__session = session
 
-    def login(self, user=None, password=None, session=Session()):
+    def login(self, user=None, password=None, session=None):
         """Creates session with your credentials.
-        Reads I-DE-USER and I-DE-PASSWORD from environment if available,
-        falling back to the provided parameters."""
+
+        If ``user`` or ``password`` are not provided, their values are read
+        from the ``I_DE_USER`` and ``I_DE_PASSWORD`` environment variables.
+        Explicit arguments take precedence over environment variables.
+        """
+        if session is None:
+            session = Session()
         self.__session = session
-        user = user or os.getenv("I-DE-USER", user)
-        password = password or os.getenv("I-DE-PASSWORD", password)
+        user = user or os.getenv("I_DE_USER")
+        password = password or os.getenv("I_DE_PASSWORD")
         if not user or not password:
             raise LoginException(
                 user or "unknown",
-                message="Login failed: user and password are required. Set I-DE-USER and I-DE-PASSWORD environment variables or pass them as arguments.",
+                message=(
+                    "Login failed: user and password are required. "
+                    "Set I_DE_USER and I_DE_PASSWORD environment variables "
+                    "or pass them as arguments."
+                ),
             )
         login_data = [
             user,
@@ -356,7 +362,7 @@ class Iber:
     #
     # Returns a list of billed consumptions starting at midnight on the start day until 23:00 on the last day.
     # Each value is the hourly billed consumption in Wh.
-    def consumption_facturado(self, start, end):
+    def billed_consumption(self, start, end):
         json = self._consumption_facturado_raw(start, end)
         values = []
         for x in json["y"]["data"][0]:
@@ -369,5 +375,13 @@ class Iber:
     # Get total billed consumption in Wh (Watt-hour) over a time period
     #
     # start/end: datetime.date objects indicating the time period (both inclusive)
-    def total_consumption_facturado(self, start, end):
+    def total_billed_consumption(self, start, end):
         return float(self._consumption_facturado_raw(start, end)["acumulado"])
+
+    @deprecated("Use 'billed_consumption' method instead")
+    def consumption_facturado(self, start, end):
+        return self.billed_consumption(start, end)
+
+    @deprecated("Use 'total_billed_consumption' method instead")
+    def total_consumption_facturado(self, start, end):
+        return self.total_billed_consumption(start, end)

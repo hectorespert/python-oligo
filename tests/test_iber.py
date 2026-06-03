@@ -12,7 +12,7 @@ from oligo.exception import LoginException, ResponseException
 class TestIber(unittest.TestCase):
     def setUp(self):
         self._env_backup = {}
-        for key in ("I-DE-USER", "I-DE-PASSWORD"):
+        for key in ("I_DE_USER", "I_DE_PASSWORD"):
             if key in os.environ:
                 self._env_backup[key] = os.environ.pop(key)
         self.session = Session()
@@ -35,8 +35,26 @@ class TestIber(unittest.TestCase):
             self.instance.login("user", "password", self.session)
 
     def test_login_with_env_vars(self):
-        os.environ["I-DE-USER"] = "env_user"
-        os.environ["I-DE-PASSWORD"] = "env_pass"
+        os.environ["I_DE_USER"] = "env_user"
+        os.environ["I_DE_PASSWORD"] = "env_pass"
+
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.text = '{"success":"true"}'
+        mock_response.json.return_value = {"success": "true"}
+
+        with patch.object(
+            self.session, "request", return_value=mock_response
+        ) as mock_request:
+            self.instance.login(session=self.session)
+            _, kwargs = mock_request.call_args
+            payload = kwargs["json"]
+            self.assertEqual(payload[0], "env_user")
+            self.assertEqual(payload[1], "env_pass")
+
+    def test_login_explicit_args_override_env_vars(self):
+        os.environ["I_DE_USER"] = "env_user"
+        os.environ["I_DE_PASSWORD"] = "env_pass"
 
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -49,11 +67,8 @@ class TestIber(unittest.TestCase):
             self.instance.login("user", "password", self.session)
             _, kwargs = mock_request.call_args
             payload = kwargs["json"]
-            self.assertEqual(payload[0], "env_user")
-            self.assertEqual(payload[1], "env_pass")
-
-        del os.environ["I-DE-USER"]
-        del os.environ["I-DE-PASSWORD"]
+            self.assertEqual(payload[0], "user")
+            self.assertEqual(payload[1], "password")
 
     def test_login_failed(self):
         mock_response = MagicMock()
@@ -78,7 +93,7 @@ class TestIber(unittest.TestCase):
                 ResponseException, self.instance.login, "user", "password", self.session
             )
 
-    def test_consumption_facturado(self):
+    def test_billed_consumption(self):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.text = '{"y":{"data":[[{"valor":"1.5"},{"valor":"2.5"}]]}}'
@@ -87,19 +102,19 @@ class TestIber(unittest.TestCase):
         }
 
         with patch.object(self.session, "request", return_value=mock_response):
-            result = self.instance.consumption_facturado(
+            result = self.instance.billed_consumption(
                 date(2024, 1, 1), date(2024, 1, 2)
             )
             self.assertEqual(result, [1.5, 2.5])
 
-    def test_total_consumption_facturado(self):
+    def test_total_billed_consumption(self):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.text = '{"acumulado":"10.5"}'
         mock_response.json.return_value = {"acumulado": "10.5"}
 
         with patch.object(self.session, "request", return_value=mock_response):
-            result = self.instance.total_consumption_facturado(
+            result = self.instance.total_billed_consumption(
                 date(2024, 1, 1), date(2024, 1, 2)
             )
             self.assertEqual(result, 10.5)

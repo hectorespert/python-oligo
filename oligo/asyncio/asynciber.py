@@ -1,6 +1,5 @@
 import os
 
-from dotenv import load_dotenv
 from deprecated.classic import deprecated
 
 from ..exception import (
@@ -18,8 +17,6 @@ except ImportError:
 
 from datetime import datetime
 from typing import Union, Optional
-
-load_dotenv()
 
 LOGIN_URL = "loginNew/login"
 WATTHOURMETER_URL = "escenarioNew/obtenerMedicionOnline/24"
@@ -70,18 +67,27 @@ class AsyncIber:
             raise NoResponseException
         return data
 
-    async def login(self, user: str = None, password: str = None) -> bool:
+    async def login(
+        self, user: Optional[str] = None, password: Optional[str] = None
+    ) -> bool:
         """Creates session with your credentials.
-        Reads I-DE-USER and I-DE-PASSWORD from environment if available,
-        falling back to the provided parameters."""
-        self.__session = aiohttp.ClientSession()
-        user = os.getenv("I-DE-USER", user)
-        password = os.getenv("I-DE-PASSWORD", password)
+
+        If ``user`` or ``password`` are not provided, their values are read
+        from the ``I_DE_USER`` and ``I_DE_PASSWORD`` environment variables.
+        Explicit arguments take precedence over environment variables.
+        """
+        user = user or os.getenv("I_DE_USER")
+        password = password or os.getenv("I_DE_PASSWORD")
         if not user or not password:
             raise LoginException(
                 user or "unknown",
-                message="Login failed: user and password are required. Set I-DE-USER and I-DE-PASSWORD environment variables or pass them as arguments.",
+                message=(
+                    "Login failed: user and password are required. "
+                    "Set I_DE_USER and I_DE_PASSWORD environment variables "
+                    "or pass them as arguments."
+                ),
             )
+        self.__session = aiohttp.ClientSession()
         payload = [
             user,
             password,
@@ -231,13 +237,21 @@ class AsyncIber:
     #
     # Returns a list of billed consumptions starting at midnight on the start day until 23:00 on the last day.
     # Each value is the hourly billed consumption in Wh.
-    async def consumption_facturado(self, start: datetime, end: datetime) -> list:
+    async def billed_consumption(self, start: datetime, end: datetime) -> list:
         data = await self._consumption_facturado_raw(start, end)
         return [float(x["valor"]) for x in data["y"]["data"][0] if x]
 
     # Get total billed consumption in Wh (Watt-hour) over a time period
     #
     # start/end: datetime.date objects indicating the time period (both inclusive)
-    async def total_consumption_facturado(self, start, end) -> float:
+    async def total_billed_consumption(self, start, end) -> float:
         data = await self._consumption_facturado_raw(start, end)
         return float(data["acumulado"])
+
+    @deprecated("Use 'billed_consumption' method instead")
+    async def consumption_facturado(self, start: datetime, end: datetime) -> list:
+        return await self.billed_consumption(start, end)
+
+    @deprecated("Use 'total_billed_consumption' method instead")
+    async def total_consumption_facturado(self, start, end) -> float:
+        return await self.total_billed_consumption(start, end)
