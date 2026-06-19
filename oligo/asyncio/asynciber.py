@@ -1,7 +1,14 @@
+import os
+
 from deprecated.classic import deprecated
 
-from ..exception import SessionException, ResponseException, NoResponseException, LoginException, \
-    SelectContractException
+from ..exception import (
+    SessionException,
+    ResponseException,
+    NoResponseException,
+    LoginException,
+    SelectContractException,
+)
 
 try:
     import aiohttp
@@ -23,6 +30,7 @@ GUARDAR_ESCENARIO_URL = "escenarioNew/confirmarMedicionOnLine/{}/1/{}"
 BORRAR_ESCENARIO_URL = "escenarioNew/borrarEscenario/"
 OBTENER_PERIODO_URL = "consumoNew/obtenerDatosConsumoPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
 OBTENER_PERIODO_GENERACION_URL = "consumoNew/obtenerDatosGeneracionPeriodo/fechaInicio/{}00:00:00/fechaFinal/{}00:00:00/"
+OBTENER_PERIODO_FACTURADO_URL = "consumoNew/obtenerDatosConsumoFacturado/numFactura/null//fechaDesde//{}00:00:00//fechaHasta//{}23:59:00/true/"
 
 
 class AsyncIber:
@@ -59,8 +67,26 @@ class AsyncIber:
             raise NoResponseException
         return data
 
-    async def login(self, user: str, password: str) -> bool:
-        """Creates session with your credentials"""
+    async def login(
+        self, user: Optional[str] = None, password: Optional[str] = None
+    ) -> bool:
+        """Creates session with your credentials.
+
+        If ``user`` or ``password`` are not provided, their values are read
+        from the ``I_DE_USER`` and ``I_DE_PASSWORD`` environment variables.
+        Explicit arguments take precedence over environment variables.
+        """
+        user = user or os.getenv("I_DE_USER")
+        password = password or os.getenv("I_DE_PASSWORD")
+        if not user or not password:
+            raise LoginException(
+                user or "unknown",
+                message=(
+                    "Login failed: user and password are required. "
+                    "Set I_DE_USER and I_DE_PASSWORD environment variables "
+                    "or pass them as arguments."
+                ),
+            )
         self.__session = aiohttp.ClientSession()
         payload = [
             user,
@@ -197,3 +223,35 @@ class AsyncIber:
     async def total_consumption(self, start, end) -> float:
         data = await self._consumption_raw(start, end)
         return float(data["acumulado"])
+
+    async def _consumption_facturado_raw(self, start: datetime, end: datetime) -> list:
+        return await self.__request(
+            OBTENER_PERIODO_FACTURADO_URL.format(
+                start.strftime("%d-%m-%Y"), end.strftime("%d-%m-%Y")
+            )
+        )
+
+    # Get billed consumption data from a time period
+    #
+    # start/end: datetime.date objects indicating the time period (both inclusive)
+    #
+    # Returns a list of billed consumptions starting at midnight on the start day until 23:00 on the last day.
+    # Each value is the hourly billed consumption in Wh.
+    async def billed_consumption(self, start: datetime, end: datetime) -> list:
+        data = await self._consumption_facturado_raw(start, end)
+        return [float(x["valor"]) for x in data["y"]["data"][0] if x]
+
+    # Get total billed consumption in Wh (Watt-hour) over a time period
+    #
+    # start/end: datetime.date objects indicating the time period (both inclusive)
+    async def total_billed_consumption(self, start, end) -> float:
+        data = await self._consumption_facturado_raw(start, end)
+        return float(data["acumulado"])
+
+    @deprecated("Use 'billed_consumption' method instead")
+    async def consumption_facturado(self, start: datetime, end: datetime) -> list:
+        return await self.billed_consumption(start, end)
+
+    @deprecated("Use 'total_billed_consumption' method instead")
+    async def total_consumption_facturado(self, start, end) -> float:
+        return await self.total_billed_consumption(start, end)
